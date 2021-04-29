@@ -7,7 +7,7 @@ function BrockerUrl(props) {
     return (
         <div>
             <label htmlFor="brockerUrlInput" className="brockerUrl">
-                Brocker URL :
+                URL du Brocker :
             </label>
             <br/>
             <input
