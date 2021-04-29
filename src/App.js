@@ -1,93 +1,78 @@
-import React from "react";
 import './App.css';
-import PropTypes from "prop-types";
-import mqtt from "mqtt";
-
-function BrockerUrl(props) {
-    return (
-        <div>
-            <label htmlFor="brockerUrlInput" className="brockerUrl">
-                URL du Brocker :
-            </label>
-            <br/>
-            <input
-                type="text"
-                id="brockerUrlInput"
-                size="30"
-                value={props.url}
-                onChange={props.onChange}
-            />
-        </div>
-    );
-}
-
-BrockerUrl.propTypes = {
-    url: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-};
-
-function DevicesList(props) {
-    const result = props.devices.map((obj) => <a href key={obj.id}> {obj.name}<br/></a>);
-    return <div className="devicesList">{result}</div>;
-}
-
-DevicesList.propTypes = {
-    devices: PropTypes.array,
-};
+import React from "react";
+import mqtt from 'mqtt';
+import Broker from './Broker';
+import Menu from './Menu';
+import Sensor from "./Sensor";
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch
+} from "react-router-dom";
 
 class App extends React.Component {
     constructor(props) {
         super(props);
-        const url = "ws://random.pigne.org:9001";
-        this.state = {
-            url: url,
-            client: mqtt.connect(url),
-            sensors: [],
-        };
+        this.menu = React.createRef();
+        this.state = ({sensors:[]});
     }
+    onKeyDown = (e) => {
+        if (e.key === 'Enter') {
+          const url = e.target.value;
 
-    componentDidMount() {
-        this.updateMqttClient();
-    }
+            const client = mqtt.connect(url);
 
-    updateMqttClient() {
-        this.state.client.on("connect", () => {
-            this.state.client.subscribe("value/#", () => {
-                console.log("subscribing...");
+            const sensors = [];
+            const truc = this;
+
+            client.on('connect', function () {
+                client.subscribe('value/#', function (err) {
+                    console.log("subscribing...");
+                });
             });
-        });
 
-        this.state.client.on("message", (topic, message) => {
-            const id = topic.substring(6);
-            const obj = JSON.parse(message.toString());
-            let sensor = this.state.sensors.find((element) => element.id === id);
+            client.on('message', function (topic, message) {
+                const id = topic.substring(6);
 
-            if (typeof sensor === "undefined") {
-                sensor = {id, ...obj, values: []};
-                delete sensor.value;
-                this.setState({sensors: this.state.sensors.concat([sensor])});
-            }
-        });
+                const obj = JSON.parse(message.toString());
+
+                let sensor = sensors.find(element => element.id === id)
+                if (typeof sensor === 'undefined') {
+                    sensor = {id, ...obj, values: []};
+                    delete sensor.value;
+                    sensors.push(sensor);
+                }
+
+                sensor.values.push(obj.value);
+                const debut = sensor.values.length - 10 > 0 ? sensor.values.length - 10 : 0;
+                sensor.values = sensor.values.slice(debut);
+                console.log('---------------------');
+                for (sensor of sensors) {
+                    console.log(sensor.name, sensor.values.length);
+                }
+
+                truc.setState({sensors:sensors});
+                truc.changeState(truc.state.sensors);
+            });
+        }
     }
+
+    changeState = (sensors) => {
+        this.menu.current.changeState(sensors);
+    };
 
     render() {
         return (
-            <div className="App">
-                <h1>TP Lab React et React Router</h1>
-                <BrockerUrl
-                    url={this.state.url}
-                    onChange={(e) =>
-                        this.setState(
-                            {
-                                url: e.target.value,
-                                client: mqtt.connect(e.target.value),
-                            },
-                            this.updateMqttClient
-                        )
-                    }/>
-                <br/>
-                <DevicesList devices={this.state.sensors}/>
-            </div>
+            <Router>
+                <div className="App">
+                    <h1>TP Lab React et React Router</h1>
+                    <Broker onKeyDown={this.onKeyDown}/>
+                    <Menu ref={this.menu}/>
+                    <Switch>
+                        <Route path="/:id" children={<Sensor sensors={this.state.sensors} />} />
+                    </Switch>
+                </div>
+            </Router>
         );
     }
 }
