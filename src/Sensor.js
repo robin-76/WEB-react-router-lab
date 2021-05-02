@@ -10,7 +10,7 @@ function Sensor(props) {
     return (
         <div class='sensors'>
             <h3>{sensor.name}</h3>
-            <p>Valeur actuelle :</p>
+            <p>Valeur : actuelle :</p>
             <h4>{sensor.values[sensor.values.length-1]}</h4>
             <p>Historique :</p>
             <table>

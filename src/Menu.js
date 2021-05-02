@@ -16,7 +16,7 @@ class Menu extends React.Component {
             <div className='boutons'>
                 <ul>
                     {this.state.sensors.map((sensor)=>{
-                        return <li key = {sensor.name}><Link to={sensor.name.replace(/\s/g, "")}>{sensor.name}</Link></li>;
+                        return <li id = "active" key = {sensor.name}><Link to={sensor.name.replace(/\s/g, "")}>{sensor.name}</Link></li>;
                     })}
                 </ul>
             </div>
