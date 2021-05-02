@@ -1,4 +1,4 @@
-# React & React Router Lab
+# React & React Router Lab [![pipeline status](https://www-apps.univ-lehavre.fr/forge/gr161657/WEB-react-router-lab/badges/master/pipeline.svg)](https://www-apps.univ-lehavre.fr/forge/gr161657/WEB-react-router-lab/commits/master) [![coverage report](https://www-apps.univ-lehavre.fr/forge/gr161657/WEB-react-router-lab/badges/master/coverage.svg)](https://www-apps.univ-lehavre.fr/forge/gr161657/WEB-react-router-lab/commits/master)
 
 - Année : M1 IWOCS
 - Matière: WEB

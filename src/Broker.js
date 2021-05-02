@@ -10,7 +10,7 @@ class Broker extends React.Component {
         return (
             <div className='broker'>
                 <h2>URL du Broker :</h2>
-                <input type="text" size="21" placeholder="ws://random.pigne.org:9001" onKeyDown={this.onKeyDown} />
+                <input type="text" size="25" value="ws://random.pigne.org:9001" onKeyDown={this.onKeyDown} />
             </div>
         );
     }

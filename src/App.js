@@ -16,14 +16,13 @@ class App extends React.Component {
         this.menu = React.createRef();
         this.state = ({sensors:[]});
     }
+
     onKeyDown = (e) => {
         if (e.key === 'Enter') {
-          const url = e.target.value;
-
+            const url = e.target.value;
             const client = mqtt.connect(url);
-
             const sensors = [];
-            const truc = this;
+            const res = this;
 
             client.on('connect', function () {
                 client.subscribe('value/#', function (err) {
@@ -33,7 +32,6 @@ class App extends React.Component {
 
             client.on('message', function (topic, message) {
                 const id = topic.substring(6);
-
                 const obj = JSON.parse(message.toString());
 
                 let sensor = sensors.find(element => element.id === id)
@@ -46,13 +44,8 @@ class App extends React.Component {
                 sensor.values.push(obj.value);
                 const debut = sensor.values.length - 10 > 0 ? sensor.values.length - 10 : 0;
                 sensor.values = sensor.values.slice(debut);
-                console.log('---------------------');
-                for (sensor of sensors) {
-                    console.log(sensor.name, sensor.values.length);
-                }
-
-                truc.setState({sensors:sensors});
-                truc.changeState(truc.state.sensors);
+                res.setState({sensors:sensors});
+                res.changeState(res.state.sensors);
             });
         }
     }
@@ -67,9 +60,9 @@ class App extends React.Component {
                 <div className="App">
                     <h1>TP Lab React et React Router</h1>
                     <Broker onKeyDown={this.onKeyDown}/>
-                    <Menu ref={this.menu}/>
+                    <Menu ref={this.menu} sensors={this.state.sensors}/>
                     <Switch>
-                        <Route path="/:id" children={<Sensor sensors={this.state.sensors} />} />
+                        <Route path="/:name" children={<Sensor sensors={this.state.sensors} />} />
                     </Switch>
                 </div>
             </Router>
