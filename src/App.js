@@ -60,7 +60,7 @@ class App extends React.Component {
                 <div className="App">
                     <h1>TP Lab React et React Router</h1>
                     <Broker onKeyDown={this.onKeyDown}/>
-                    <Menu ref={this.menu} sensors={this.state.sensors}/>
+                    <Menu ref={this.menu}/>
                     <Switch>
                         <Route path="/:name" children={<Sensor sensors={this.state.sensors} />} />
                     </Switch>
