@@ -63,10 +63,12 @@ h3 {
 }
 
 h4 {
+  margin-top: 1px;
   font-size: 20px;
 }
 
 p {
+  margin-top: 50px;
   font-size: 20px;
   font-style:italic;
 }
@@ -115,4 +117,51 @@ td {
 
 li:hover {
   background-color: #BBB8CC;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  grid-auto-rows: minmax(50%, 25px)
+}
+
+.textURL {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.champURL {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.boutons {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.nomSensor {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.textValeurActuelle {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.valeurSensor {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.historique {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.tableau {
+  grid-column: 2;
+  grid-row: 4;
 }

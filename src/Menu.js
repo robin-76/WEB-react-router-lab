@@ -13,12 +13,12 @@ class Menu extends React.Component {
 
     render() {
         return (
-            <div className='boutons'>
-                <ul>
-                    {this.state.sensors.map((sensor)=>{
-                        return <li key = {sensor.name}><Link to={sensor.name.replace(/\s/g, "")}>{sensor.name}</Link></li>;
-                    })}
-                </ul>
+          <div className="wrapper">
+            <div className="boutons"><ul>
+                {this.state.sensors.map((sensor)=>{
+                    return <li key = {sensor.name}><Link to={sensor.name.replace(/\s/g, "")}>{sensor.name}</Link></li>;
+                })}
+            </ul></div>
             </div>
         );
     }
