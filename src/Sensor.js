@@ -8,19 +8,20 @@ function Sensor(props) {
     })[0];
 
     return (
-        <div className='sensors'>
-            <h3>{sensor.name}</h3>
-            <p>Valeur actuelle :</p>
-            <h4>{sensor.values[sensor.values.length-1]}</h4>
-            <p>Historique :</p>
-            <table>
-                <tbody>
-                {sensor.values.slice().reverse().map(value=>{
-                    return <tr><td>{value}</td></tr>;
-                })}
-                </tbody>
-            </table>
+      <div className="wrapper">
+        <div className="nomSensor"><h3>{sensor.name}</h3></div>
+        <div className="textValeurActuelle"><p>Valeur actuelle :</p></div>
+        <div className="valeurSensor"><h4>{sensor.values[sensor.values.length-1]}</h4></div>
+        <div className="historique"><p>Historique :</p></div>
+        <div className="tableau"><table>
+            <tbody>
+            {sensor.values.slice().reverse().map(value=>{
+                return <tr key={value}><td>{value}</td></tr>;
+            })}
+            </tbody>
+        </table>
         </div>
+      </div>
     );
 }
 
