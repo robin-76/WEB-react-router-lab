@@ -1,5 +1,5 @@
 import './App.css';
-import React from "react";
+import React, { useState } from 'react';
 import mqtt from 'mqtt';
 import Broker from './Broker';
 import Menu from './Menu';
@@ -10,19 +10,15 @@ import {
     Switch
 } from "react-router-dom";
 
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.menu = React.createRef();
-        this.state = ({sensors:[]});
-    }
+function App(props) {
+  const menu = React.createRef();
+  const [sensors, setSensors] = useState([]);
 
-    onKeyDown = (e) => {
+  const onKeyDown = (e) => {
         if (e.key === 'Enter') {
             const url = e.target.value;
             const client = mqtt.connect(url);
             const sensors = [];
-            const res = this;
 
             client.on('connect', function () {
                 client.subscribe('value/#', function (err) {
@@ -44,30 +40,28 @@ class App extends React.Component {
                 sensor.values.push(obj.value);
                 const debut = sensor.values.length - 10 > 0 ? sensor.values.length - 10 : 0;
                 sensor.values = sensor.values.slice(debut);
-                res.setState({sensors:sensors});
-                res.changeState(res.state.sensors);
+                setSensors(sensors);
+                changeState(sensors);
             });
         }
     }
 
-    changeState = (sensors) => {
-        this.menu.current.changeState(sensors);
+    const changeState = (sensors) => {
+        menu.current.changeState(sensors);
     };
 
-    render() {
         return (
             <Router>
                 <div className="App">
                     <h1>TP Lab React et React Router</h1>
-                    <Broker onKeyDown={this.onKeyDown}/>
-                    <Menu ref={this.menu}/>
+                    <Broker onKeyDown={onKeyDown}/>
+                    <Menu ref={menu}/>
                     <Switch>
-                        <Route path="/:name" children={<Sensor sensors={this.state.sensors} />} />
+                        <Route path="/:name" children={<Sensor sensors={sensors} />} />
                     </Switch>
                 </div>
             </Router>
         );
-    }
 }
 
 export default App;
