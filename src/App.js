@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 
 function App(props) {
-  const menu = React.createRef();
+  const menu = React.useRef();
   const [sensors, setSensors] = useState([]);
 
   const onKeyDown = (e) => {
