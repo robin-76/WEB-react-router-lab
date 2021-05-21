@@ -1,13 +1,10 @@
 import {render, screen} from '@testing-library/react';
 import App from "./App";
 import React from "react";
-import {
-    BrowserRouter as Router
-} from "react-router-dom";
 
 test('Test classe App + correct Sensor', () => {
     let app = React.createRef();
-    render(<Router><App ref={app}/></Router>);
+    render(<App />);
     const sensors = [
         {
             "id": "123456",
@@ -21,7 +18,8 @@ test('Test classe App + correct Sensor', () => {
             ]
         }
     ];
-    app.current.changeState(sensors);
-    const linkElement = screen.getByText(/Temperature Couloir/i);
+
+    app.current.changeSensors(sensors);
+    const linkElement = screen.getByText(/TP/i);
     expect(linkElement).toBeInTheDocument();
 });

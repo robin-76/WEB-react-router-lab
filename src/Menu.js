@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
+import React, {useState, forwardRef, useImperativeHandle} from "react";
 import {Link} from "react-router-dom";
 
-function Menu(props) {
-  const [sensors, setSensors] = useState([]);
+const Menu = forwardRef((props, ref) => {
+    const [sensors, setSensors] = useState([]);
 
-  const changeState = (sensors) => {
-        setSensors(sensors);
-    }
+    useImperativeHandle(ref, () => ({
+        changeSensors(tabSensors) {
+            setSensors([...tabSensors]);
+        }
+    }));
 
     return (
-      <div className="wrapper">
-        <div className="boutons"><ul>
-            {sensors.map((sensor)=>{
-                return <li key = {sensor.name}><Link to={sensor.name.replace(/\s/g, "")}>{sensor.name}</Link></li>;
-            })}
-        </ul></div>
+        <div className="wrapper">
+            <div className="boutons"><ul>
+                {sensors.map((sensor, index)=>{
+                    return <li key = {index}><Link to={sensor.name.replace(/\s/g, "")}>{sensor.name}</Link></li>;
+                })}
+            </ul></div>
         </div>
     );
-
-}
+});
 
 export default Menu;

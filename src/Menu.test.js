@@ -19,7 +19,7 @@ test('Test classe Menu + correct Sensor', () => {
             ]
         }
     ];
-    menu.current.changeState(sensors);
+    menu.current.changeSensors(sensors);
     const linkElement = screen.getByText(/Temperature Salle A111/i);
     expect(linkElement).toBeInTheDocument();
 });

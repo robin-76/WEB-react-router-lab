@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, {useState, useRef} from 'react';
 import mqtt from 'mqtt';
 import Broker from './Broker';
 import Menu from './Menu';
@@ -10,15 +10,15 @@ import {
     Switch
 } from "react-router-dom";
 
-function App(props) {
-  const menu = React.useRef();
-  const [sensors, setSensors] = useState([]);
+function App() {
+    const menu = useRef();
+    const [sensors, setSensors] = useState([]);
 
-  const onKeyDown = (e) => {
+    const onKeyDown = (e) => {
         if (e.key === 'Enter') {
             const url = e.target.value;
             const client = mqtt.connect(url);
-            const sensors = [];
+            const tabSensors = [];
 
             client.on('connect', function () {
                 client.subscribe('value/#', function (err) {
@@ -30,38 +30,34 @@ function App(props) {
                 const id = topic.substring(6);
                 const obj = JSON.parse(message.toString());
 
-                let sensor = sensors.find(element => element.id === id)
+                let sensor = tabSensors.find(element => element.id === id)
                 if (typeof sensor === 'undefined') {
                     sensor = {id, ...obj, values: []};
                     delete sensor.value;
-                    sensors.push(sensor);
+                    tabSensors.push(sensor);
                 }
 
                 sensor.values.push(obj.value);
                 const debut = sensor.values.length - 10 > 0 ? sensor.values.length - 10 : 0;
                 sensor.values = sensor.values.slice(debut);
-                setSensors(sensors);
-                changeState(sensors);
+                setSensors([...tabSensors]);
+                menu.current.changeSensors(tabSensors);
             });
         }
     }
 
-    const changeState = (sensors) => {
-        menu.current.changeState(sensors);
-    };
-
-        return (
-            <Router>
-                <div className="App">
-                    <h1>TP Lab React et React Router</h1>
-                    <Broker onKeyDown={onKeyDown}/>
-                    <Menu ref={menu}/>
-                    <Switch>
-                        <Route path="/:name" children={<Sensor sensors={sensors} />} />
-                    </Switch>
-                </div>
-            </Router>
-        );
+    return (
+        <Router>
+            <div className="App">
+                <h1>TP Lab React et React Router</h1>
+                <Broker onKeyDown={onKeyDown}/>
+                <Menu ref={menu}/>
+                <Switch>
+                    <Route path="/:name" children={<Sensor sensors={sensors} />} />
+                </Switch>
+            </div>
+        </Router>
+    );
 }
 
 export default App;
