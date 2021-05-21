@@ -56,7 +56,7 @@ function App() {
             }
 
           }
-          connexion()
+          connexion();
         }
       }
       window.addEventListener('keydown', onKeyDown);
